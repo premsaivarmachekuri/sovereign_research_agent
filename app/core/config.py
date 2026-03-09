@@ -5,6 +5,8 @@ class Settings(BaseSettings):
     openai_api_key: str
     openai_model: str = "gpt-4o-mini"
     tavily_api_key: str
+    llm_base_url: str = "http://localhost:11434"
+    llm_model: str = "llama-3"
     tavily_max_results: int = 10
     pdf_max_chars: int = 15_000
     pdf_max_count: int = 5

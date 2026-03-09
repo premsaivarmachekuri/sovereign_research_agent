@@ -1,39 +1,71 @@
-# {{PROJECT_NAME}}
+# 🛡️ Sovereign Research Agent
 
-{{DESCRIPTION}}
+An autonomous research assistant that takes a topic, searches the web, analyzes multiple PDF documents, and generates a high-quality intelligence newsletter.
 
-## Setup
+---
+
+## 🚀 Concept
+
+The **Sovereign Research Agent** is designed to perform deep research independently. Give it a topic like "Future of Solar Batteries," and it will:
+1.  **Search**: Use the **Tavily API** to find current web data.
+2.  **Analyze**: Read up to **5 PDF documents** from the search results or local sources.
+3.  **Summarize**: Distill complex technical information into concise summaries.
+4.  **Compose**: Write a final, formatted research newsletter.
+
+## 🛠️ Tech Stack
+
+*   **[LangGraph](https://python.langchain.com/docs/langgraph)**: Orchestrates the agent's state transitions and complex reasoning loops.
+*   **[Tavily API](https://tavily.com/)**: powers real-time web search and information extraction.
+*   **Local Llama-3**: Used for private, sovereign reasoning (integrated via **FastMCP**).
+*   **[FastMCP](https://github.com/fastmcp/fastmcp)**: Efficient Model Context Protocol server for connecting local LLMs to external tools and knowledge.
+*   **[FastAPI](https://fastapi.tiangolo.com/)**: RESTful API backend for interacting with the agent.
+*   **[PyMuPDF](https://pymupdf.readthedocs.io/)**: For high-performance PDF parsing and extraction.
+
+---
+
+## ⚙️ Setup
+
+### 1. Environment & Keys
+Clone the repository and prepare your environment variables:
 ```bash
 cp .env.example .env
-# Add your OPENAI_API_KEY to .env
+```
+Fill in the following in your `.env`:
+- `OPENAI_API_KEY`: (Optional) If not using Local Llama-3.
+- `TAVILY_API_KEY`: Your key from tavily.com.
+- `LLM_BASE_URL`: URL for your local Llama-3 server (integrated via FastMCP).
 
+### 2. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
+
+### 3. Run the Agent
+Start the FastAPI server:
+```bash
 uvicorn main:app --reload
-```
-
-## Structure
-```
-app/
-├── api/v1/routes.py     # API endpoints
-├── agents/base_agent.py # Your LangGraph agent
-├── core/config.py       # Settings via .env
-└── utils/logger.py      # Structured logging
-```
-
-## Author
-
-{{AUTHOR}}
 ```
 
 ---
 
-## Step 7 — Empty `__init__.py` files
+## 🧠 Key Skill: Managing Agent State and Memory
 
-Create empty `__init__.py` in every `app/` subdirectory so Python treats them as modules:
+The core of this project is demonstrating how to leverage **LangGraph's state management**. Memory nodes are used to:
+- Track search history across reasoning steps.
+- Maintain document context during summarization.
+- Store multi-step feedback loops for newsletter refinement.
+
+## 📁 Structure
+```text
+app/
+├── agents/             # LangGraph state-agent definitions
+├── api/v1/             # API routes for triggering the agent
+├── core/               # Configuration and Settings (Pydantic)
+├── utils/              # PDF parsing, logger, and helper tools
+└── main.py             # Entry point for the FastAPI server
 ```
-app/__init__.py
-app/api/__init__.py
-app/api/v1/__init__.py
-app/agents/__init__.py
-app/core/__init__.py
-app/utils/__init__.py
+
+---
+
+## 👨‍💻 Author
+**Premsai Varma Chekuri**
