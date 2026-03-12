@@ -96,8 +96,8 @@ Work through each component in dependency order:
 - [ ] Add any new settings you need
 
 ### 6b. Utilities (`app/utils/`)
-- [ ] Review `logger.py` — ensure logging is working
-- [ ] *(If not present)* Create `pdf_parser.py` — a utility using **PyMuPDF** to extract text from PDF files
+- [x] Review `logger.py` — ensure logging is working
+- [x] *(If not present)* Create `pdf_parser.py` — a utility using **PyMuPDF** to extract text from PDF files
   ```python
   import fitz  # PyMuPDF
   def parse_pdf(path: str) -> str:
