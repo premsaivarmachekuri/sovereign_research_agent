@@ -1,11 +1,14 @@
 from fastapi import APIRouter
-from app.agents.base_agent import run_agent
+from app.agent.base_agent import run_agent
 
 router = APIRouter()
 
 
-@router.post("/agent/run")
-async def agent_endpoint(query: str):
+@router.post("/analyze")
+async def agent_endpoint(data: dict):
     """Run the agentic AI pipeline."""
-    result = await run_agent(query)
+    topic = data.get("topic")
+    if not topic:
+        return {"error": "topic is required"}
+    result = await run_agent(topic)
     return {"result": result}
