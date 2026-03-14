@@ -1,14 +1,27 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from app.agent.base_agent import run_agent
+from app.utils.logger import get_logger
 
+logger = get_logger(__name__)
 router = APIRouter()
 
+class AnalyzeRequest(BaseModel):
+    topic: str
 
 @router.post("/analyze")
-async def agent_endpoint(data: dict):
-    """Run the agentic AI pipeline."""
-    topic = data.get("topic")
-    if not topic:
-        return {"error": "topic is required"}
-    result = await run_agent(topic)
-    return {"result": result}
+async def analyze_topic(request: AnalyzeRequest):
+    """
+    Run the agentic AI pipeline to generate a newsletter on the given topic.
+    """
+    logger.info(f"Received analysis request for topic: {request.topic}")
+    
+    if not request.topic.strip():
+        raise HTTPException(status_code=400, detail="Topic cannot be empty")
+    
+    try:
+        newsletter = await run_agent(request.topic)
+        return {"newsletter": newsletter}
+    except Exception as e:
+        logger.error(f"Error in analyze_topic: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
