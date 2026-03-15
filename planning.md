@@ -92,8 +92,8 @@ Review each component and understand its role before building it out:
 Work through each component in dependency order:
 
 ### 6a. Configuration Layer (`app/core/`)
-- [ ] Understand `config.py` — how it reads `TAVILY_API_KEY`, `LLM_BASE_URL`, etc.
-- [ ] Add any new settings you need
+- [x] Understand `config.py` — how it reads `TAVILY_API_KEY`, `LLM_BASE_URL`, etc.
+- [x] Add any new settings you need
 
 ### 6b. Utilities (`app/utils/`)
 - [x] Review `logger.py` — ensure logging is working
@@ -106,24 +106,24 @@ Work through each component in dependency order:
   ```
 
 ### 6c. LangGraph Agent (`app/agent/`)
-- [ ] Understand `base_agent.py` — current agent state and graph structure
-- [ ] Define the **AgentState** (TypedDict) with fields:
+- [x] Understand `base_agent.py` — current agent state and graph structure
+- [x] Define the **AgentState** (TypedDict) with fields:
   - `topic` (str) — research topic
   - `search_results` (list) — Tavily results
   - `pdf_texts` (list) — extracted PDF content
   - `summaries` (list) — per-document summaries
   - `newsletter` (str) — final output
-- [ ] Build the **LangGraph nodes**:
-  - [ ] `search_node` — calls Tavily API to fetch web results
-  - [ ] `pdf_reader_node` — downloads/reads up to 5 PDFs from results
-  - [ ] `summarizer_node` — uses LLM to summarize each PDF/document
-  - [ ] `composer_node` — writes the final newsletter from all summaries
-- [ ] Connect nodes into a **StateGraph** with proper edges
-- [ ] Compile the graph: `graph = workflow.compile()`
+- [x] Build the **LangGraph nodes**:
+  - [x] `search_node` — calls Tavily API to fetch web results
+  - [x] `pdf_reader_node` — downloads/reads up to 5 PDFs from results
+  - [x] `summarizer_node` — uses LLM to summarize each PDF/document
+  - [x] `composer_node` — writes the final newsletter from all summaries
+- [x] Connect nodes into a **StateGraph** with proper edges
+- [x] Compile the graph: `graph = workflow.compile()`
 
 ### 6d. API Routes (`app/api/v1/`)
-- [ ] Review `routes.py`
-- [ ] Ensure there is a `POST /analyze` endpoint that:
+- [x] Review `routes.py`
+- [x] Ensure there is a `POST /analyze` endpoint that:
   - Accepts `{ "topic": "..." }` as JSON body
   - Invokes the LangGraph agent
   - Returns the generated newsletter
@@ -132,18 +132,18 @@ Work through each component in dependency order:
 
 ## Phase 7: Run the Application
 
-- [ ] **Start the FastAPI server**
+- [x] **Start the FastAPI server**
   ```bash
   uvicorn main:app --reload
   ```
-- [ ] Open the auto-generated docs in your browser:
+- [x] Open the auto-generated docs in your browser:
   `http://127.0.0.1:8000/docs`
-- [ ] **Test the health endpoint**
+- [x] **Test the health endpoint**
   ```bash
   curl http://127.0.0.1:8000/health
   # Expected: {"status": "ok", "project": "sovereign_research_agent"}
   ```
-- [ ] **Test the agent endpoint**
+- [x] **Test the agent endpoint**
   ```bash
   curl -X POST http://127.0.0.1:8000/api/v1/analyze \
     -H "Content-Type: application/json" \
