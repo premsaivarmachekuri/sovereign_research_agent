@@ -185,7 +185,6 @@ Work through each component in dependency order:
 - [ ] Add **logging** at each agent step using `get_logger`
 - [ ] *(Optional)* Add a **feedback loop** node that refines the newsletter if it is too short
 - [ ] *(Optional)* Stream the newsletter output using FastAPI `StreamingResponse`
-- [ ] *(Optional)* Write unit tests for individual nodes using `pytest`
 - [ ] Update `README.md` with any new features or changes
 
 ---
