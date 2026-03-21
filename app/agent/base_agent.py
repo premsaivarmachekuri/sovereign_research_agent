@@ -65,7 +65,7 @@ async def search_node(state: AgentState) -> dict:
         return {"search_results": []}
 
 async def pdf_reader_node(state: AgentState) -> dict:
-    """Downloads and reads up to 5 PDFs from search results."""
+    """Downloads and reads up to 5 PDFs from search results or local files."""
     logger.info("--- NODE: pdf_reader_node ---")
     
     pdf_urls = []
@@ -74,26 +74,23 @@ async def pdf_reader_node(state: AgentState) -> dict:
         if url.lower().endswith('.pdf'):
             pdf_urls.append(url)
     
-    # Limit to maximum count from settings (default 5)
+    # Limit url downloads to max settings
     pdf_urls = pdf_urls[:settings.pdf_max_count]
-    logger.info(f"Identified {len(pdf_urls)} potential PDFs to read.")
+    logger.info(f"Identified {len(pdf_urls)} potential PDFs to download.")
     
     pdf_texts = []
     async with httpx.AsyncClient() as client:
         for url in pdf_urls:
             try:
                 logger.info(f"Downloading PDF: {url}")
-                # Use a reasonable timeout
                 response = await client.get(url, timeout=30.0)
                 if response.status_code == 200:
-                    # Create a unique temporary filename
                     temp_name = f"temp_{abs(hash(url))}.pdf"
                     with open(temp_name, "wb") as f:
                         f.write(response.content)
                     
                     try:
                         text = parse_pdf(temp_name)
-                        # Limit text length per document to manage context size
                         if len(text) > settings.pdf_max_chars:
                             text = text[:settings.pdf_max_chars] + "... [truncated]"
                         pdf_texts.append(text)
@@ -104,8 +101,26 @@ async def pdf_reader_node(state: AgentState) -> dict:
                 else:
                     logger.warning(f"Failed to download PDF {url}: {response.status_code}")
             except Exception as e:
-                logger.error(f"Error processing PDF {url}: {e}")
-    
+                logger.error(f"Error processing PDF from URL {url}: {e}")
+
+    # Also read from local files if they exist in data/pdfs
+    local_pdf_dir = os.path.join(os.getcwd(), "data", "pdfs")
+    if os.path.exists(local_pdf_dir):
+        logger.info(f"Checking for local PDFs in {local_pdf_dir}...")
+        for filename in os.listdir(local_pdf_dir):
+            if filename.lower().endswith(".pdf"):
+                file_path = os.path.join(local_pdf_dir, filename)
+                try:
+                    logger.info(f"Reading local PDF: {filename}")
+                    text = parse_pdf(file_path)
+                    if len(text) > settings.pdf_max_chars:
+                        text = text[:settings.pdf_max_chars] + "... [truncated]"
+                    pdf_texts.append(text)
+                except Exception as e:
+                    logger.error(f"Error reading local PDF {filename}: {e}")
+
+    # Limit total PDFs to settings
+    pdf_texts = pdf_texts[:settings.pdf_max_count]
     return {"pdf_texts": pdf_texts}
 
 async def summarizer_node(state: AgentState) -> dict:

@@ -43,24 +43,20 @@ pip install -r requirements.txt
 ### 3. Run the Agent
 Start the FastAPI server:
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 ---
 
-## 🧠 Key Skill: Managing Agent State and Memory
-
-The core of this project is demonstrating how to leverage **LangGraph's state management**. Memory nodes are used to:
-- Track search history across reasoning steps.
-- Maintain document context during summarization.
-- Store multi-step feedback loops for newsletter refinement.
-
 ## 📁 Structure
 ```text
 app/
-├── agents/             # LangGraph state-agent definitions
-├── api/v1/             # API routes for triggering the agent
+├── agent/              # LangGraph state-agent definitions
+├── api/v1/             # API routes and endpoints
+│   ├── endpoints/      # category-specific routes
+│   └── api.py          # root v1 router
 ├── core/               # Configuration and Settings (Pydantic)
+├── schemas/            # Pydantic models for request/response
 ├── utils/              # PDF parsing, logger, and helper tools
 └── main.py             # Entry point for the FastAPI server
 ```
